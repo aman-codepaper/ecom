@@ -36,7 +36,7 @@
        
            <h2>Update Product</h2>
       <div class="div_deg">
-        <form action="{{'edit_product',$data->id}}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url('edit_product', $data->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div>
                 <label>Title</label>

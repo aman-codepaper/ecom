@@ -87,20 +87,25 @@ class AdminController extends Controller
     public function update_product($id){
       $data=Product::find($id);
       $category=Category::all();
-      return view('admin.update_product',compact('data','category  '));
+      return view('admin.update_product',compact('data','category'));
     }
 
-
+ 
     public function edit_product(Request $request,$id){
       $data=Product::find($id);
+      $currentImage = $data->image;
       $data->title=$request->title;
       $data->quantity=$request->quantity;
       $data->category=$request->category;
-      $image = $image->image;
+      $image = $request->file('image');
       if($image){
         $imagename=time().'.'.$image->getClientOriginalExtension();
         $request->image->move('products',$imagename);
         $data->image = $imagename;
+     
+if ($currentImage && file_exists(public_path('products/'.$currentImage))) {
+    unlink(public_path('products/'.$currentImage));
+}
       }
       $data->save();
       flash()->success('Product Updated Succesfully.');
