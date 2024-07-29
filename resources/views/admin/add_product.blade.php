@@ -51,7 +51,8 @@
                 <div class="container-fluid">
 
                     <div class="div_deg">
-                        <form action="">
+                        <form action="{{url('upload_product')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <h1>Add Product</h1>
                             <div class="input_deg">
                                 <label>Product title</label>
@@ -65,11 +66,11 @@
 
                             <div class="input_deg">
                                 <label>Price</label>
-                                <input type="text" number="price">
+                                <input type="text" name="price">
                             </div>
                             <div class="input_deg">
                                 <label>Quantity</label>
-                                <input type="number" number="qty">
+                                <input type="number" name="qty">
                             </div>
                             <div class="input_deg">
                                 <label>Product Category</label>
