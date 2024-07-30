@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\User;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -10,6 +14,26 @@ class HomeController extends Controller
         return view('admin.index');
     }
     public function home(){
-        return view('home.index');
+        $product=Product::all();
+        return view('home.index',compact('product'));
+    }
+    public function login_home(){
+        $product=Product::all();
+        return view('home.index',compact('product'));
+    }
+
+    public function product_details($id){
+      $data = Product::find($id);
+      return view('home.product_details',compact('data'));
+    }
+    public function add_cart($id){
+      $product_id=$id;
+      $user=Auth::user();
+      $user_id=$user->id;
+      $data->user_id = $user_id;
+      $data->product_id = $user_id;
+      $data->save();
+      flash()->success('Added Cart Succesfully.');
+      return redirect()->back();
     }
 }

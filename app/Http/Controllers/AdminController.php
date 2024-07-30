@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
@@ -95,6 +93,7 @@ class AdminController extends Controller
       $data=Product::find($id);
       $currentImage = $data->image;
       $data->title=$request->title;
+      $data->description=$request->description;
       $data->quantity=$request->quantity;
       $data->category=$request->category;
       $image = $request->file('image');
@@ -103,12 +102,19 @@ class AdminController extends Controller
         $request->image->move('products',$imagename);
         $data->image = $imagename;
      
-if ($currentImage && file_exists(public_path('products/'.$currentImage))) {
-    unlink(public_path('products/'.$currentImage));
-}
+      if ($currentImage && file_exists(public_path('products/'.$currentImage))) {
+          unlink(public_path('products/'.$currentImage));
+      }
       }
       $data->save();
       flash()->success('Product Updated Succesfully.');
       return redirect('/view_product');
+    }
+
+    public function product_search(Request $request){
+      $search = $request->search;
+      $product=Product::where('title','LIKE','%'.$search.'%')->orWhere('category','LIKE','%'.$search.'%')->paginate(3);
+
+      return view('admin.view_product',compact('product'));
     }
 }

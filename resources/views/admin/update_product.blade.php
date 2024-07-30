@@ -44,7 +44,7 @@
             </div>
             <div>
                 <label>Description</label>
-                <textarea name="text" id="price" >{{$data->description}}</textarea>
+                <textarea type="text" name="description" id="price" >{{$data->description}}</textarea>
             </div>
             <div>
                 <label>Price</label>
