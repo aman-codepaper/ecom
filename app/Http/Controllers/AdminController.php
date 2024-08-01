@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Cart;
+use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -70,17 +73,27 @@ class AdminController extends Controller
       $product=Product::paginate(3);
       return view('admin.view_product',compact('product'));
     }
-
-    public function delete_product($id){
-      $data=Product::find($id);
-
-      $image_path = public_path('products/'.$data->image);
-      if(file_exists($image_path)){
-        unlink($image_path);
+    public function delete_product($id) {
+      // Find the product
+      $product = Product::find($id);
+      
+      if ($product) {
+          // Remove the product image
+          $image_path = public_path('products/' . $product->image);
+          if (file_exists($image_path)) {
+              unlink($image_path);
+          }
+          
+          // Delete the related rows in the carts table
+          Cart::where('product_id', $id)->delete();
+          
+          // Delete the product
+          $product->delete();
       }
-      $data->delete();
+  
       return redirect()->back();
-    }
+  }
+  
 
     public function update_product($id){
       $data=Product::find($id);
@@ -116,5 +129,27 @@ class AdminController extends Controller
       $product=Product::where('title','LIKE','%'.$search.'%')->orWhere('category','LIKE','%'.$search.'%')->paginate(3);
 
       return view('admin.view_product',compact('product'));
+    }
+
+    public function view_orders(){
+      $data=Order::all();
+      return view('admin.order',compact('data'));
+    }
+    public function on_the_way($id){
+     $data=Order::find($id);
+     $data->status='On the way';
+     $data->save();
+     return redirect('/view_orders');
+    }
+    public function delivered($id){
+     $data=Order::find($id);
+     $data->status='Delivered';
+     $data->save();
+     return redirect('/view_orders');
+    }
+    public function print_pdf($id){
+      $data = Order::find($id);
+      $pdf = Pdf::loadView('admin.invoice',compact('data'));
+      return $pdf->download('invoice.pdf');
     }
 }

@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav  ">
         <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="shop.html">
@@ -22,7 +22,7 @@
         <li class="nav-item">
           <a class="nav-link" href="why.html">
             Why Us
-          </a>
+          </a> 
         </li>
         <li class="nav-item">
           <a class="nav-link" href="testimonial.html">
@@ -36,8 +36,9 @@
       <div class="user_option">
         @if (Route::has('login'))
         @auth
-        <a href="">
+        <a href="{{url('mycart')}}">
           <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+          {{$count}}
         </a>
         
         <form action="{{url('logout')}}" method="POST" style="padding: 10px;">
